@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import AuthAttempt.dto.AuthRequest;
 import AuthAttempt.dto.RequestInfo;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 /*
@@ -22,6 +23,7 @@ import lombok.experimental.FieldDefaults;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @PropertySource(value = "count.properties")
+@Getter
 public class InspectService {
     
     StreamBridge streamBridge;
@@ -48,13 +50,15 @@ public class InspectService {
                   .compute(url, (key, requestInfo) -> {
                       if (requestInfo == null) {
                           requestInfo = new RequestInfo();
+                          requestInfo.setCount(1);
+                          requestInfo.getRequests().add(request);
                       } else {
                           requestInfo.setCount(requestInfo.getCount() + 1);
                           requestInfo.getRequests().add(request);
                       }
                       return requestInfo;
                   });
-        
+
         checkAndSendToDB(ip, url);
     }
 
