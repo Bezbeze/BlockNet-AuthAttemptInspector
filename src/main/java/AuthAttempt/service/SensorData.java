@@ -1,4 +1,4 @@
-package AuthAttempt.config;
+package AuthAttempt.service;
 
 import java.util.function.Consumer;
 
@@ -9,7 +9,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import AuthAttempt.dto.AuthRequest;
-import AuthAttempt.service.InspectService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,7 +18,7 @@ import lombok.extern.log4j.Log4j2;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Log4j2
 @RequiredArgsConstructor
-public class SensorDataConfig {
+public class SensorData {
 	ObjectMapper mapper;
 	InspectService inspectService;
 	
