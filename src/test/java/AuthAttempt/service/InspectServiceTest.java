@@ -67,6 +67,7 @@ public class InspectServiceTest {
         
         assertTrue(request1Info.getRequests().contains(request));
         assertTrue(!request2Info.getRequests().contains(request2));
+
     }
     
     @Test
