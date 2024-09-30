@@ -1,18 +1,19 @@
-package AuthAttempt.service;
+package authattempt.service;
 
-import java.util.function.Consumer;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
+import authattempt.dto.AuthRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import AuthAttempt.dto.AuthRequest;
+import java.util.function.Consumer;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+
+
+
 
 @Configuration
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -23,10 +24,10 @@ public class SensorData {
 	InspectService inspectService;
 	
 	@Bean
-	Consumer<String> receiveSensorData(){
+	Consumer<String> receiveSensorData() {
 		return sensorData -> {
 			try {
-				AuthRequest authRequest = mapper.readValue(sensorData, AuthRequest.class);
+				final AuthRequest authRequest = mapper.readValue(sensorData, AuthRequest.class);
 				inspectService.processRequest(authRequest);
 			} catch (JsonProcessingException e) {
 				log.error("Failed to read value authRequest", e);

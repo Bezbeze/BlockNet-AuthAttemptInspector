@@ -1,5 +1,16 @@
-package AuthAttempt.service;
+package authattempt.service;
 
+import authattempt.dto.AuthRequest;
+import authattempt.dto.RequestInfo;
+import java.lang.reflect.Method;
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.stream.function.StreamBridge;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -8,18 +19,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import java.lang.reflect.Method;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cloud.stream.function.StreamBridge;
-
-import AuthAttempt.dto.AuthRequest;
-import AuthAttempt.dto.RequestInfo;
-import lombok.SneakyThrows;
 
 @SpringBootTest
 public class InspectServiceTest {
@@ -44,13 +43,13 @@ public class InspectServiceTest {
 
     @Test
     @DisplayName("data add correct")
-    public void testProcessRequest_NewIPNewURL() {
-        String url2 = "001.001.001.34";
-        AuthRequest request2 = new AuthRequest("002", checkIp, url2);
+    public void testProcessRequestNewIPNewURL() {
+        final String url2 = "001.001.001.34";
+        final AuthRequest request2 = new AuthRequest("002", checkIp, url2);
         inspectService.processRequest(request);
         inspectService.processRequest(request2);
-        RequestInfo request1Info = inspectService.getRequestMap().get(checkIp).get(url);
-        RequestInfo request2Info = inspectService.getRequestMap().get(checkIp).get(url2);
+        final RequestInfo request1Info = inspectService.getRequestMap().get(checkIp).get(url);
+        final RequestInfo request2Info = inspectService.getRequestMap().get(checkIp).get(url2);
 
         assertNotNull(request1Info);
         assertNotNull(request2Info);
@@ -68,7 +67,7 @@ public class InspectServiceTest {
     
     @Test
     @DisplayName("less then max attempts doesn't call sent notification")
-    public void testProcessRequest_LessThenMaxAttempts() {
+    public void testProcessRequestLessThenMaxAttempts() {
         for (int i = 0; i < 9; i++) {
             inspectService.processRequest(request);
         }
@@ -77,7 +76,7 @@ public class InspectServiceTest {
 
     @Test
     @DisplayName("Max attempts calls sent notification")
-    public void testProcessRequest_ExceedingMaxAttempts() {
+    public void testProcessRequestExceedingMaxAttempts() {
         for (int i = 0; i < 11; i++) {
             inspectService.processRequest(request);
         }
@@ -87,14 +86,14 @@ public class InspectServiceTest {
     @Test
     @SneakyThrows
     @DisplayName("Time period less")
-    public void testCheckAndSendToDB_WithinTimePeriod(){
+    public void testCheckAndSendToDBWithinTimePeriod() {
         inspectService.processRequest(request);
 
-        RequestInfo requestInfo = inspectService.getRequestMap().get(checkIp).get(url);
-        requestInfo.setTimestamp(System.currentTimeMillis() - 
-        		(inspectService.getMeasurePeriodSec()*1000) + 1000);
+        final RequestInfo requestInfo = inspectService.getRequestMap().get(checkIp).get(url);
+        requestInfo.setTimestamp(System.currentTimeMillis()
+        		- (inspectService.getMeasurePeriodSec() * 1000) + 1000);
 
-        Method method = InspectService.class.getDeclaredMethod("checkAndSendToDB", String.class, String.class);
+        final Method method = InspectService.class.getDeclaredMethod("checkAndSendToDB", String.class, String.class);
         method.setAccessible(true);
         method.invoke(inspectService, checkIp, url);
 
@@ -104,14 +103,14 @@ public class InspectServiceTest {
     @Test
     @SneakyThrows
     @DisplayName("Time period more")
-    public void testCheckAndSendToDB_ExceedingTimePeriod() {
+    public void testCheckAndSendToDBExceedingTimePeriod() {
         inspectService.processRequest(request);
 
-        RequestInfo requestInfo = inspectService.getRequestMap().get(checkIp).get(url);
-        requestInfo.setTimestamp(System.currentTimeMillis() - 
-        		(inspectService.getMeasurePeriodSec()*1000) - 1000);
+        final RequestInfo requestInfo = inspectService.getRequestMap().get(checkIp).get(url);
+        requestInfo.setTimestamp(System.currentTimeMillis() 
+        		- (inspectService.getMeasurePeriodSec() * 1000) - 1000);
 
-        Method method = InspectService.class.getDeclaredMethod("checkAndSendToDB", String.class, String.class);
+        final Method method = InspectService.class.getDeclaredMethod("checkAndSendToDB", String.class, String.class);
         method.setAccessible(true);
         method.invoke(inspectService, checkIp, url);
 
