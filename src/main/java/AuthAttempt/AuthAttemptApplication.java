@@ -1,11 +1,10 @@
-package AuthAttempt;
+package authattempt;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class AuthAttemptApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(AuthAttemptApplication.class, args);
 		try {

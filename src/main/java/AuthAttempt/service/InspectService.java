@@ -1,19 +1,17 @@
-package AuthAttempt.service;
+package authattempt.service;
 
+import authattempt.dto.AuthRequest;
+import authattempt.dto.RequestInfo;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
-
-import AuthAttempt.dto.AuthRequest;
-import AuthAttempt.dto.RequestInfo;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.experimental.FieldDefaults;
 
 /*
  * The InspectService processes authentication requests and tracks request counts
@@ -43,8 +41,8 @@ public class InspectService {
     }
 
     public void processRequest(AuthRequest request) {
-        String ip = request.getCheckIp();
-        String url = request.getClientUrl();
+    	final String ip = request.getCheckIp();
+        final String url = request.getClientUrl();
 
         requestMap.computeIfAbsent(ip, k -> new ConcurrentHashMap<>())
                   .compute(url, (key, requestInfo) -> {
@@ -56,16 +54,16 @@ public class InspectService {
                           requestInfo.setCount(requestInfo.getCount() + 1);
                           requestInfo.getRequests().add(request);
                       }
-                      return requestInfo;
+                    return requestInfo;
                   });
 
         checkAndSendToDB(ip, url);
     }
 
     private void checkAndSendToDB(String ip, String url) {
-        RequestInfo requestInfo = requestMap.get(ip).get(url);
-        long currentTime = System.currentTimeMillis();
-        long elapsedTime = currentTime - requestInfo.getTimestamp();
+    	final RequestInfo requestInfo = requestMap.get(ip).get(url);
+    	final long currentTime = System.currentTimeMillis();
+        final long elapsedTime = currentTime - requestInfo.getTimestamp();
 
         if (requestInfo.getCount() >= maxAttempts) {
             sendToDB(requestInfo.getRequests());
@@ -76,7 +74,7 @@ public class InspectService {
     }
 
     private void resetIpData(String ip, String url, long currentTime) {
-        RequestInfo requestInfo = requestMap.get(ip).get(url);
+    	final RequestInfo requestInfo = requestMap.get(ip).get(url);
         requestInfo.setTimestamp(currentTime);
         requestInfo.getRequests().clear();
         requestInfo.setCount(0);

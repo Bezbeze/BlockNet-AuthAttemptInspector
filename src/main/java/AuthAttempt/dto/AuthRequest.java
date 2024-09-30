@@ -1,4 +1,4 @@
-package AuthAttempt.dto;
+package authattempt.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
