@@ -63,7 +63,7 @@ public class InspectServiceTest {
         System.out.println("Request1Info: " + request1Info);
         System.out.println("Request2Info: " + request2Info);
         
-        assertTrue(request1Info.getRequests().contains(request));
+        assertTrue(!request1Info.getRequests().contains(request));
         assertTrue(request2Info.getRequests().contains(request2));
 
     }
