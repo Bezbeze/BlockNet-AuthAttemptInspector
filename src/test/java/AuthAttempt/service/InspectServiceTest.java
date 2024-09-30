@@ -47,10 +47,8 @@ public class InspectServiceTest {
     public void testProcessRequest_NewIPNewURL() {
         String url2 = "001.001.001.34";
         AuthRequest request2 = new AuthRequest("002", checkIp, url2);
-
         inspectService.processRequest(request);
         inspectService.processRequest(request2);
-
         RequestInfo request1Info = inspectService.getRequestMap().get(checkIp).get(url);
         RequestInfo request2Info = inspectService.getRequestMap().get(checkIp).get(url2);
 
@@ -62,7 +60,7 @@ public class InspectServiceTest {
 
         System.out.println("Request1Info: " + request1Info);
         System.out.println("Request2Info: " + request2Info);
-        
+       
         assertTrue(request1Info.getRequests().contains(request));
         assertTrue(request2Info.getRequests().contains(request2));
 
